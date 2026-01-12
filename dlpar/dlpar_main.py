@@ -234,6 +234,8 @@ class DlparTests(Test):
                           self.cpu_payload)
             for cpu in self.cpu_payload:
                 rvalue = Ded_obj.add_ded_cpu(cpu)
+                #self.log.info("I want the rvalue")
+                #self.log.info(rvalue)
                 if rvalue == 1:
                     self.fail("CPU add Command failed please check the logs")
                 self.log.info(
@@ -273,11 +275,26 @@ class DlparTests(Test):
             self.data_payload_backup(Pu)
             # Add proc_units and  virtual_procs
             for i in range(len(Pu)):
-                if Sha_obj.add_proc(Pu[i], '--procunits') == 1:
+                #if Sha_obj.add_proc(Pu[i], '--procunits') == 1:
+                result = Sha_obj.add_proc(Pu[i], '--procunits')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    #Any other failure consider as fail
+                    
                     self.fail(
                         "proc_units add Command failed please check the logs")
                 self.log.info("====>%s procunits got added====>\n " % Pu[i])
-                if Sha_obj.add_proc(Vp[i], '--procs') == 1:
+                #if Sha_obj.add_proc(Vp[i], '--procs') == 1:
+                result = Sha_obj.add_proc(Vp[i], '--procs')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    #Any other failure consider as fail
                     self.fail("CPU add Command failed please check the logs")
                 self.log.info(
                     "===============>%s cpus got added=======>\n " % Vp[i])
@@ -314,11 +331,25 @@ class DlparTests(Test):
 
             # Iterate through the reversed lists
             for vp, pu in zip(Vp_reverse, Pu_reverse):
-                if Sha_obj.remove_proc(vp, '--procs') == 1:
+                #if Sha_obj.remove_proc(vp, '--procs') == 1:
+                result = Sha_obj.remove_proc(Vp, '--procs')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    #Any other failure consider as fail
                     self.fail("Cpu remove Command failed please \
                               check the logs")
                 self.log.info("====>%s cpu got removed====>\n " % vp)
-                if Sha_obj.remove_proc(pu, '--procunits') == 1:
+                #if Sha_obj.remove_proc(pu, '--procunits') == 1:
+                result = Sha_obj.remove_proc(pu, '--procunits')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    #Any other failure consider as fail
                     self.fail("proc units remove Command failed \
                               please check the logs")
                 self.log.info(
@@ -359,20 +390,52 @@ class DlparTests(Test):
             Pu = eval(str(loaded_payload_data[1]))
             # Iterate through the reversed lists
             for pu, vp in zip(Pu, Vp):
-                if Sha_obj.add_proc(vp, '--procs') == 1:
+                #if Sha_obj.add_proc(vp, '--procs') == 1:
+                result = Sha_obj.add_proc(vp, '--procs')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    #Any other failure consider as fail
                     self.fail("CPU add Command failed please check the logs")
+                
                 self.log.info(
                     "===============>%s cpus got added=======>\n " % vp)
-                if Sha_obj.add_proc(pu, '--procunits') == 1:
+                
+                #if Sha_obj.add_proc(pu, '--procunits') == 1:
+                result = Sha_obj.add_proc(pu, '--procunits')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    # Any other error = real failure
                     self.fail(
                         "proc_units add Command failed please check the logs")
                 self.log.info("====>%s procunits got added====>\n " % pu)
-                if Sha_obj.remove_proc(pu, '--procunits') == 1:
+                
+                #if Sha_obj.remove_proc(pu, '--procunits') == 1:
+                result = Sha_obj.remove_proc(pu, '--procunits')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    # Any other error = real failure
                     self.fail("proc units remove Command failed \
                               please check the logs")
                 self.log.info(
                     "===============>%s procunits got removed=======>\n " % pu)
-                if Sha_obj.remove_proc(vp, '--procs') == 1:
+                
+                #if Sha_obj.remove_proc(vp, '--procs') == 1:
+                result = Sha_obj.remove_proc(vp, '--procs')
+                if result == 1:
+                    last = getattr(Sha_obj, "last_result", None)
+                    stdout = getattr(last, "stdout_text", "")
+                    stderr = getattr(last, "stderr_text", "")
+                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    #Any other failure consider as fail
                     self.fail("Cpu remove Command failed \
                               please check the logs")
                 self.log.info("====>%s cpu got removed====>\n " % vp)
@@ -710,3 +773,19 @@ class DlparTests(Test):
                     )
                 else:
                     self.log.info("SMT is unchanged ,Test passed.")
+
+    def _cancel_on_capacity_exceeded(self, stdout="", stderr=""):
+         """
+         Cancel test ONLY for known shared-mode ADD DLPAR errors
+         """
+         combined = f"{stdout}\n{stderr}".lower()
+         if (
+             "ratio of assigned processing units to assigned virtual processors" in combined
+             or
+             "processing units to exceed the maximum capacity allowed with the virtual processor setting" in combined
+         ):
+             self.log.warning("Shared CPU ADD constraint hit (HMC limitation)")
+             self.log.warning(combined)
+             self.cancel(
+                   "Shared CPU ADD blocked by PU/VP ratio or max capacity constraint"
+             )
