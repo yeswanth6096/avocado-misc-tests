@@ -278,12 +278,9 @@ class DlparTests(Test):
                 #if Sha_obj.add_proc(Pu[i], '--procunits') == 1:
                 result = Sha_obj.add_proc(Pu[i], '--procunits')
                 if result == 1:
-                    last = getattr(Sha_obj, "last_result", None)
-                    stdout = getattr(last, "stdout_text", "")
-                    stderr = getattr(last, "stderr_text", "")
-                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    stdout = getattr(Sha_obj, "last_stdout", "")
+                    self._cancel_on_capacity_exceeded(stdout)
                     #Any other failure consider as fail
-                    
                     self.fail(
                         "proc_units add Command failed please check the logs")
                 self.log.info("====>%s procunits got added====>\n " % Pu[i])
@@ -293,7 +290,7 @@ class DlparTests(Test):
                     last = getattr(Sha_obj, "last_result", None)
                     stdout = getattr(last, "stdout_text", "")
                     stderr = getattr(last, "stderr_text", "")
-                    self._cancel_on_shared_add_errors(stdout, stderr)
+                    self._cancel_on_capacity_exceeded(stdout, stderr)
                     #Any other failure consider as fail
                     self.fail("CPU add Command failed please check the logs")
                 self.log.info(
@@ -773,19 +770,19 @@ class DlparTests(Test):
                     )
                 else:
                     self.log.info("SMT is unchanged ,Test passed.")
+     
+    def _cancel_on_capacity_exceeded(self, stdout=""):
+        if not stdout:
+           return
+        combined = stdout.lower()
 
-    def _cancel_on_capacity_exceeded(self, stdout="", stderr=""):
-         """
-         Cancel test ONLY for known shared-mode ADD DLPAR errors
-         """
-         combined = f"{stdout}\n{stderr}".lower()
-         if (
-             "ratio of assigned processing units to assigned virtual processors" in combined
-             or
-             "processing units to exceed the maximum capacity allowed with the virtual processor setting" in combined
-         ):
-             self.log.warning("Shared CPU ADD constraint hit (HMC limitation)")
-             self.log.warning(combined)
-             self.cancel(
-                   "Shared CPU ADD blocked by PU/VP ratio or max capacity constraint"
-             )
+        if (
+           "ratio of assigned processing units to assigned virtual processors" in combined
+            or
+           "processing units to exceed the maximum capacity allowed with the virtual processor setting" in combined
+        ):
+            #self.log.warning("Shared CPU ADD constraint hit (HMC limitation)")
+            #self.log.warning(stdout)
+            self.cancel(
+               "Shared CPU ADD blocked by PU/VP ratio or max capacity constraint"
+            )
