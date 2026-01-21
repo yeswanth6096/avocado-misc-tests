@@ -553,6 +553,7 @@ class DedicatedCpu(TestCase):
         # Add the cpus
         flag = ['proc', 'a', '--procs']
         self.cmd_result = self.Dlpar_engine(flag, linux_machine, quantity)
+        self.last_stdout = self.cmd_result.stdout_text
         self.log.debug('Sleeping for %s seconds before proceeding' %
                        self.sleep_time)
         time.sleep(self.sleep_time)
@@ -601,6 +602,7 @@ class DedicatedCpu(TestCase):
         # Remove the cpus
         flag = ['proc', 'r', '--procs']
         self.cmd_result = self.Dlpar_engine(flag, linux_machine, quantity)
+        self.last_stdout = self.cmd_result.stdout_text
         if self.cmd_result.stdout_text != "":
             return 1
         self.log.debug('Sleeping for %s seconds before proceeding' %
@@ -732,6 +734,7 @@ class CpuUnit(TestCase):
         # Add the cpus
         flag = ['proc', 'a', flag]
         self.cmd_result = self.Dlpar_engine(flag, linux_machine, quantity)
+        self.last_stdout = self.cmd_result.stdout_text
         if self.cmd_result.stdout_text != "":
             return 1
         self.log.debug('Sleeping for %s seconds before proceeding' %
@@ -787,6 +790,7 @@ class CpuUnit(TestCase):
         # Remove the cpus
         flag = ['proc', 'r', flag]
         self.cmd_output = self.Dlpar_engine(flag, linux_machine, quantity)
+        self.last_stdout = self.cmd_result.stdout_text
         if self.cmd_result.stdout_text != "":
             return 1
         self.log.debug(self.cmd_output)
@@ -946,6 +950,7 @@ class Memory(TestCase):
         # Add the memory
         flag = ['mem', 'a', '-q']
         self.cmd_result = self.Dlpar_engine(flag, linux_machine, quantity)
+        self.last_stdout = self.cmd_result.stdout_text
         if self.cmd_result.stdout_text != "":
             return 1
         self.log.debug('Sleeping for %s seconds before proceeding' %
@@ -964,6 +969,7 @@ class Memory(TestCase):
         # Remove the memory
         flag = ['mem', 'r', '-q']
         self.cmd_result = self.Dlpar_engine(flag, linux_machine, quantity)
+        self.last_stdout = self.cmd_result.stdout_text
         if self.cmd_result.stdout_text != "":
             return 1
         self.log.debug('Sleeping for %s seconds before proceeding' %
